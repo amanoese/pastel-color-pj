@@ -23,14 +23,14 @@
         </form>
       </div>
     </nav>
-    <div class="container-fluid list-group">
+    <div class="container list-group">
       <div v-for="task in tasks"
         type="button" class="float-left align-middle list-group-item list-group-item-action">
         <div class="row">
-          <span class="col-sm-2 col-3 t-start">
+          <span class="col-md-1 col-sm-2 col-3 t-start">
             <toggle-button class="toggle-button"
-              :width="90"
-              :height="44"
+              :width="50"
+              :height="22"
               :labels="{checked: 'on', unchecked: 'off'}"/>
           </span>
           <span class="mr-auto col-auto t-start tasks" v-text="task.text"></span>
@@ -48,7 +48,7 @@
         <button type="button" class="btn btn-default" @click.prevent="closeModal">Exit</button>
       </div>
       <div slot="modal-body" class="modal-body">
-        <gmap-map style="width: 100%; height: 500px"
+        <gmap-map style="width: 100%; height: 400px"
           :center="center"
           :zoom="14">
           <gmap-marker
@@ -128,18 +128,6 @@ export default {
 </script>
 
 <style lang="scss">
-#top .navbar-brand,
-#top .tasks {
-  font-size: 3rem;
-}
-
-#top .btn.map {
-  font-size: 2rem;
-}
-
-#top .vue-js-switch {
-  font-size: 1.5rem;
-}
 
 h1, h2 {
   font-weight: normal;
