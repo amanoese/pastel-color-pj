@@ -1,5 +1,5 @@
 <template>
-  <div id="top">
+  <div id="Top">
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
       <a class="navbar-brand" href="#">Pastel-Colors</a>
       <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -128,7 +128,6 @@ export default {
 </script>
 
 <style lang="scss">
-
 h1, h2 {
   font-weight: normal;
 }
