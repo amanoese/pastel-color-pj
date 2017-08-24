@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div id="top">
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
       <a class="navbar-brand" href="#">Pastel-Colors</a>
       <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -23,16 +23,19 @@
         </form>
       </div>
     </nav>
-    <div class="container list-group">
+    <div class="container-fluid list-group">
       <div v-for="task in tasks"
         type="button" class="float-left align-middle list-group-item list-group-item-action">
         <div class="row">
-          <span class="col-sm-1 col-3 t-center">
-            <toggle-button class="toggle-button" :labels="{checked: 'on', unchecked: 'off'}"/>
+          <span class="col-sm-2 col-3 t-start">
+            <toggle-button class="toggle-button"
+              :width="75"
+              :height="33"
+              :labels="{checked: 'on', unchecked: 'off'}"/>
           </span>
-          <span class="mr-auto col-auto t-start" v-text="task.text"></span>
-          <span class="col-auto  t-start">
-            <a class="btn btn-primary" href="#" role="button" @click="showModal( task )">Map</a>
+          <span class="mr-auto col-auto t-start tasks" v-text="task.text"></span>
+          <span class="col-auto t-start">
+            <a class="btn btn-primary map" href="#" role="button" @click="showModal( task )">Map</a>
           </span>
         </div>
       </div>
@@ -42,6 +45,7 @@
         <h4 class="modal-title">
           Map of {{ mapTitle }}
         </h4>
+        <button type="button" class="btn btn-default" @click.prevent="closeModal">Exit</button>
       </div>
       <div slot="modal-body" class="modal-body">
         <gmap-map style="width: 100%; height: 400px"
@@ -54,9 +58,7 @@
           </gmap-marker>
         </gmap-map>
       </div>
-      <div slot="modal-footer" class="modal-footer">
-        <button type="button" class="btn btn-default" @click.prevent="closeModal">Exit</button>
-      </div>
+      <div slot="modal-footer" class="modal-footer"></div>
     </modal>
   </div>
 </template>
@@ -155,5 +157,17 @@ a {
 }
 .toggle-button {
   margin-bottom: 0;
+}
+#top .vue-js-switch {
+  font-size: 16px;
+}
+#top .navbar-brand,
+#top .tasks,
+#top .btn.map {
+  font-size: 2rem;
+}
+.modal-dialog {
+  max-width: none;
+  margin: 30px;
 }
 </style>
