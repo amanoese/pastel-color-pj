@@ -29,8 +29,8 @@
         <div class="row">
           <span class="col-sm-2 col-3 t-start">
             <toggle-button class="toggle-button"
-              :width="75"
-              :height="33"
+              :width="90"
+              :height="44"
               :labels="{checked: 'on', unchecked: 'off'}"/>
           </span>
           <span class="mr-auto col-auto t-start tasks" v-text="task.text"></span>
@@ -48,7 +48,7 @@
         <button type="button" class="btn btn-default" @click.prevent="closeModal">Exit</button>
       </div>
       <div slot="modal-body" class="modal-body">
-        <gmap-map style="width: 100%; height: 400px"
+        <gmap-map style="width: 100%; height: 500px"
           :center="center"
           :zoom="14">
           <gmap-marker
@@ -128,6 +128,19 @@ export default {
 </script>
 
 <style lang="scss">
+#top .navbar-brand,
+#top .tasks {
+  font-size: 3rem;
+}
+
+#top .btn.map {
+  font-size: 2rem;
+}
+
+#top .vue-js-switch {
+  font-size: 1.5rem;
+}
+
 h1, h2 {
   font-weight: normal;
 }
@@ -157,14 +170,6 @@ a {
 }
 .toggle-button {
   margin-bottom: 0;
-}
-#top .vue-js-switch {
-  font-size: 16px;
-}
-#top .navbar-brand,
-#top .tasks,
-#top .btn.map {
-  font-size: 2rem;
 }
 .modal-dialog {
   max-width: none;
