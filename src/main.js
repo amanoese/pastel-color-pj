@@ -10,7 +10,7 @@ Vue.use(ToggleButton)
 Vue.use(VueGoogleMaps, {
   installComponents: true,
   load: {
-    key: 'google api key',
+    key: 'AIzaSyAhaa6ypZ6fKrAEZXkG6SuPbjKXY4BRMp8',
     libraries: 'places', // This is required if you use the Autocomplete plugin
     // OR: libraries: 'places,drawing'
     // OR: libraries: 'places,drawing,visualization'

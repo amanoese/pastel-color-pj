@@ -30,52 +30,97 @@
           <span class="col-sm-1 col-3 t-center">
             <toggle-button class="toggle-button" :labels="{checked: 'on', unchecked: 'off'}"/>
           </span>
-          <span class="mr-auto col-auto t-start" v-text="task"></span>
+          <span class="mr-auto col-auto t-start" v-text="task.text"></span>
           <span class="col-auto  t-start">
-            <a class="btn btn-primary" href="#" role="button">Map</a>
+            <a class="btn btn-primary" href="#" role="button" @click="showModal( task )">Map</a>
           </span>
         </div>
       </div>
     </div>
-    <div class="container">
-      <gmap-map style="width: 100%; height: 300px"
-        :center="center"
-        :zoom="14">
-        <gmap-marker
-          :position="center"
-          :clickable="true"
-          :draggable="true"
-          @click="center">
-        </gmap-marker>
-      </gmap-map>
-    </div>
+    <modal :show.sync="modalFlag" large width="400">
+      <div slot="modal-header" class="modal-header">
+        <h4 class="modal-title">
+          Map of {{ mapTitle }}
+        </h4>
+      </div>
+      <div slot="modal-body" class="modal-body">
+        <gmap-map style="width: 100%; height: 400px"
+          :center="center"
+          :zoom="14">
+          <gmap-marker
+            :position="center"
+            :clickable="true"
+            :draggable="true">
+          </gmap-marker>
+        </gmap-map>
+      </div>
+      <div slot="modal-footer" class="modal-footer">
+        <button type="button" class="btn btn-default" @click.prevent="closeModal">Exit</button>
+      </div>
+    </modal>
   </div>
 </template>
 
 <script>
-import { alert } from 'vue-strap'
+import { alert, modal } from 'vue-strap'
 
 export default {
   name: 'app',
   data () {
     return {
       msg: 'Welcome to Your Vue.js App',
-      tasks : [
-        '浅草寺',
-        '浅草神社',
-        '本龍院',
-        '今戸神社',
-        '不動院',
-        '石浜神社',
-        '吉原神社',
-        '鷲神社',
-        '矢先稲荷神社'
+      modalFlag: false,
+      mapTitle: 'any map.',
+      tasks : [{
+          text: '浅草寺',
+          geo: {lat: 35.714722, lng: 139.79675}
+        },{
+          text: '浅草神社',
+          geo: {lat: 35.715139, lng: 139.797444}
+        },{
+          text: '本龍院',
+          geo: {lat: 35.717055, lng: 139.803018}
+        },{
+          text: '今戸神社',
+          geo: {lat: 35.719306, lng: 139.803528}
+        },{
+          text: '不動院',
+          geo: {lat: 35.727054, lng: 139.807861}
+        },{
+          text: '石浜神社',
+          geo: {lat: 35.729789, lng: 139.806988 }
+        },{
+          text: '吉原神社',
+          geo: {lat: 35.7228664, lng: 139.7911195}
+        },{
+          text: '鷲神社',
+          geo: {lat: 35.7225053, lng: 139.789767}
+        },{
+          text: '矢先稲荷神社',
+          geo: {lat: 35.7135866, lng: 139.7855482}
+        }
       ],
-      center: {lat: 35.714722, lng: 139.79675}
+      center: { lat: 35.714722, lng: 139.79675 }
+    }
+  },
+  methods: {
+    showModal( { text , geo = { lat: 35.714722, lng: 139.79675 } } ) {
+      this.mapTitle = text
+      this.modalFlag = true
+      console.log(this.modalFlag, text, geo.lat, geo.lng )
+
+      if (text && geo ) {
+        this.center = geo
+        this.$gmapDefaultResizeBus.$emit('resize')
+      }
+    },
+    closeModal(){
+      this.modalFlag = false
     }
   },
   components: {
-    alert
+    alert,
+    modal
   }
 }
 </script>
