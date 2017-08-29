@@ -25,7 +25,7 @@
     </nav>
     <div class="container list-group">
       <div v-for="task in tasks"
-        type="button" class="float-left align-middle list-group-item list-group-item-action">
+        class="float-left align-middle list-group-item list-group-item-action">
         <div class="row">
           <span class="col-md-1 col-sm-2 col-3 t-start">
             <toggle-button class="toggle-button"
@@ -48,7 +48,7 @@
         <button type="button" class="btn btn-default" @click.prevent="closeModal">Exit</button>
       </div>
       <div slot="modal-body" class="modal-body">
-        <gmap-map style="width: 100%; height: 400px"
+        <gmap-map :style="{width: '100%', height: mapHeight + 'px'}"
           :center="center"
           :zoom="14">
           <gmap-marker
@@ -73,6 +73,7 @@ export default {
       msg: 'Welcome to Your Vue.js App',
       modalFlag: false,
       mapTitle: 'any map.',
+      mapHeight : 400,
       tasks : [{
           text: '浅草寺',
           geo: {lat: 35.714722, lng: 139.79675}
@@ -105,6 +106,13 @@ export default {
       center: { lat: 35.714722, lng: 139.79675 }
     }
   },
+  created () { // would work in 'ready', 'attached', etc.
+    let _this = this;
+    window.addEventListener('load', () => {
+      _this.mapHeight = this.$el.clientHeight * 0.9
+      console.log(this.$el.clientHeight, _this.mapHeight)
+    })
+  },
   methods: {
     showModal( { text , geo = { lat: 35.714722, lng: 139.79675 } } ) {
       this.mapTitle = text
@@ -114,6 +122,7 @@ export default {
       if (text && geo ) {
         this.center = geo
         this.$gmapDefaultResizeBus.$emit('resize')
+        console.log({ mapHeight: this.mapHeight })
       }
     },
     closeModal(){
