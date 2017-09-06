@@ -11,9 +11,11 @@
            :class="{ show : navShow }">
         <ul class="navbar-nav mr-auto">
           <li class="nav-item">
-            <a class="nav-link" href="#"
+            <a class="nav-link t-start" href="#"
               @click="showQrModal()">
-            Scan QR Code</a>
+              <octicon name="device-camera" scale="2"></octicon>
+              &nbsp;Scan QR
+            </a>
           </li>
         </ul>
       </div>
@@ -74,6 +76,8 @@
 
 <script>
 import { alert, modal } from 'vue-strap'
+import Octicon from 'vue-octicon/components/Octicon.vue'
+import 'vue-octicon/icons'
 const Instascan = require('instascan');
 
 export default {
@@ -186,7 +190,8 @@ export default {
   },
   components: {
     alert,
-    modal
+    modal,
+    Octicon
   }
 }
 </script>
