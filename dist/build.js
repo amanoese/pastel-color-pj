@@ -51032,7 +51032,7 @@ var Instascan = __webpack_require__(530);
       });
       Instascan.Camera.getCameras().then(function (cameras) {
         if (cameras.length > 0) {
-          _this3.scanner.start(cameras[0]);
+          _this3.scanner.start(cameras[cameras.length - 1]);
         } else {
           console.error('No cameras found.');
         }
