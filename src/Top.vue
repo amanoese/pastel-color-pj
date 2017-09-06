@@ -2,25 +2,22 @@
   <div id="Top-vue">
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
       <a class="navbar-brand" href="#">Pastel-Colors</a>
-      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"
+              @click="toggleNavShow()">
         <span class="navbar-toggler-icon"></span>
       </button>
-      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+
+      <div id="navbarSupportedContent" class="collapse navbar-collapse"
+           :class="{ show : navShow }">
         <ul class="navbar-nav mr-auto">
-          <li class="nav-item active">
-            <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
-          </li>
           <li class="nav-item">
-            <a class="nav-link" href="#">Link</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link disabled" href="#">Disabled</a>
+            <a class="nav-link t-start" href="#"
+              @click="showQrModal()">
+              <octicon name="device-camera" scale="2"></octicon>
+              &nbsp;Scan QR
+            </a>
           </li>
         </ul>
-        <form class="form-inline my-2 my-lg-0">
-          <input class="form-control mr-sm-2" type="text" placeholder="Search" aria-label="Search">
-          <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
-        </form>
       </div>
     </nav>
     <div class="container list-group">
@@ -40,6 +37,16 @@
         </div>
       </div>
     </div>
+    <modal :show.sync="qrModalFlag" large width="400">
+      <div slot="modal-header" class="modal-header">
+        <h4 class="modal-title">scanning qr code</h4>
+        <button type="button" class="btn btn-default" @click.prevent="closeQrModal">Exit</button>
+      </div>
+      <div slot="modal-body" class="modal-body">
+        <video id="qr-preview" style="width: 100%"></video>
+      </div>
+      <div slot="modal-footer" class="modal-footer"></div>
+    </modal>
     <modal :show.sync="modalFlag" large width="400">
       <div slot="modal-header" class="modal-header">
         <h4 class="modal-title">
@@ -58,13 +65,20 @@
           </gmap-marker>
         </gmap-map>
       </div>
-      <div slot="modal-footer" class="modal-footer"></div>
+      <div slot="modal-footer" class="modal-footer">
+        <button type="button" class="btn btn-primary btn-lg btn-block"
+          v-if="regstTask"
+          @click.prevent="addTask">Registration!</button>
+      </div>
     </modal>
   </div>
 </template>
 
 <script>
 import { alert, modal } from 'vue-strap'
+import Octicon from 'vue-octicon/components/Octicon.vue'
+import 'vue-octicon/icons'
+const Instascan = require('instascan');
 
 export default {
   name: 'app',
@@ -72,8 +86,12 @@ export default {
     return {
       msg: 'Welcome to Your Vue.js App',
       modalFlag: false,
+      qrModalFlag: false,
+      scanner: null,
+      regstTask: false,
       mapTitle: 'any map.',
       mapHeight : 400,
+      navShow : false,
       tasks : [{
           text: '浅草寺',
           geo: {lat: 35.714722, lng: 139.79675}
@@ -109,29 +127,71 @@ export default {
   created () { // would work in 'ready', 'attached', etc.
     let _this = this;
     window.addEventListener('load', () => {
-      _this.mapHeight = this.$el.clientHeight * 0.9
+      _this.mapHeight = this.$el.clientHeight * 0.85
       console.log(this.$el.clientHeight, _this.mapHeight)
     })
   },
   methods: {
-    showModal( { text , geo = { lat: 35.714722, lng: 139.79675 } } ) {
+    showModal( { text , geo = { lat: 35.714722, lng: 139.79675 } }, regstTask = false) {
       this.mapTitle = text
       this.modalFlag = true
       console.log(this.modalFlag, text, geo.lat, geo.lng )
 
       if (text && geo ) {
         this.center = geo
+        this.regstTask = regstTask
         this.$gmapDefaultResizeBus.$emit('resize')
         console.log({ mapHeight: this.mapHeight })
       }
     },
+    showQrModal(){
+      this.qrModalFlag = true;
+      this.qrScanner()
+    },
+    qrScanner(){
+      if(this.scanner == null){
+        console.log("once")
+        this.scanner = new Instascan.Scanner({ video: document.getElementById('qr-preview') })
+      }
+
+      this.scanner.addListener('scan', (content)=>{
+        console.log(content);
+        let json = JSON.parse(content)
+        if (json.text && json.geo && json.geo.lat && json.geo.lng){
+          console.log("json.geo",json.geo);
+          this.closeQrModal()
+          this.showModal(json,true)
+        }
+      });
+      Instascan.Camera.getCameras().then((cameras)=>{
+        if (cameras.length > 0) {
+          this.scanner.start(cameras[0]);
+        } else {
+          console.error('No cameras found.');
+        }
+      }).catch(function (e) {
+        console.error(e);
+      });
+    },
+    addTask(){
+      this.tasks.push({text:this.mapTitle,geo:this.center})
+      this.closeModal()
+    },
+    toggleNavShow (){
+      this.navShow = !this.navShow
+    },
     closeModal(){
       this.modalFlag = false
+    },
+    closeQrModal(){
+      this.qrModalFlag = false
+      this.scanner.stop()
     }
   },
   components: {
     alert,
-    modal
+    modal,
+    Octicon
   }
 }
 </script>
